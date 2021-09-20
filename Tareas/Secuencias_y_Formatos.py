@@ -22,7 +22,7 @@ FUNCTIONS
      Los primeros 15 nucleótidos de ARN
      Los primeros 15 aminoácidos de proteína]
 GITHUB
-
+  https://github.com/Heldrysh/python2_class/edit/master/Tareas/Secuencias_y_Formatos.py
 INPUT 
   Recibimos un archivo de GeenBank con una lista de genes 
 OUTPUT 
