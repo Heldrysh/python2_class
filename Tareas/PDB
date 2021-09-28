@@ -1,0 +1,65 @@
+"""
+NAME
+       PDB.py
+VERSION
+        0.1
+AUTHOR
+        Diego Montes Gabriel <<dmontes@lcg.unam.mx>>
+DESCRIPTION 
+        El programa recibe un archivo PDb y regresa una lista que contiene todos los residuos de una cadena en conjunto con 
+        su nombre y el nombre del residuo 
+CATEGORY
+        Recolector de datos proteomicos 
+GITHUB
+
+INPUT 
+  Introducimos un PATH de DPB, el nombre de la cadena y el aminoacido (en codigo)
+OUTPUT 
+    Una lista con el codigo del aminoacido y la posicion en la que se encuentra
+EXAMPLES
+    Input:
+      residuos: GLU
+      path: /home/diego/Descargas/lala.pdb
+      cadena: "Z"
+    Output:
+      231, 102, 86 (posiciones donde esta el aminoacido especifico)
+      """
+#Importamos la libreria junto con PDB que nos permitira leer el path 
+from Bio import PDB
+## Obtenemos los datos necesarios para el funcionamiento del programa a traves del usuario## 
+#Ingreamos nuestro archivo PATH con el que trabajaremos
+print("Por favor ingresa el path del archivo PDB con el que deseas que trabajemos en este programa: ")
+path= input
+#Especificamos la cadena en la que buscaremos los residuos 
+print("Dentro de que cadena desea que el programa haga su busqueda de residuo?")
+cadena= input
+#Especificamos el aminoacido que deseamos usar
+print("Ingrese el aminoacido que desea buscar dentro del archivo")
+residuos = input
+
+
+#Definimos la funcion que obtendra los residuos de aminoacido de interes en conjunto con sus argumentos 
+def residuo(path, cadena, residuos):
+#Generamos un parser que nos permita ignorar los "warnings" sobre PDB 
+ parser= PDB.PDBParser (Quiet= True)
+ #Creamos estructura, un metodo para obtener datos 
+ estructura = parser.get_structure("proteina",path)
+#Creamos la lista en la que guardaremos los residuos (bueno los residuos en forma de lista)
+ lista_res= []
+#
+ for modelo in estructura:
+     for string in modelo:
+         if string == modelo[cadena]:
+             for waste in string:
+                 if waste.get_resname() == residuos:
+                     lista_res.append(waste.get_id())
+                 if len (lista_res)<1:
+                     return("No se encontro el aminoacido dentro de la cadena seleccionada")
+                    else:
+                         return(lista_res)
+
+ for codon in residuo:
+     print(codon)
+
+#Llamamos a la funcion principal 
+residuo(path, cadena, residuos)
