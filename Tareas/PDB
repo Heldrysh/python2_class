@@ -55,8 +55,7 @@ def residuo(path, cadena, residuos):
                      lista_res.append(waste.get_id())
                  if len (lista_res)<1:
                      return("No se encontro el aminoacido dentro de la cadena seleccionada")
-                    else:
-                         return(lista_res)
+                   
 
  for codon in residuo:
      print(codon)
