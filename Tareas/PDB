@@ -46,7 +46,7 @@ def residuo(path, cadena, residuos):
  estructura = parser.get_structure("proteina",path)
 #Creamos la lista en la que guardaremos los residuos (bueno los residuos en forma de lista)
  lista_res= []
-#
+#Utilizamos las lineas de codigo que nos dieron en clase para la obtencion de ID del aa indicado
  for modelo in estructura:
      for string in modelo:
          if string == modelo[cadena]:
