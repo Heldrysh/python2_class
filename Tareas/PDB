@@ -2,7 +2,7 @@
 NAME
        PDB.py
 VERSION
-        0.1
+        1.1
 AUTHOR
         Diego Montes Gabriel <<dmontes@lcg.unam.mx>>
 DESCRIPTION 
@@ -29,19 +29,19 @@ from Bio import PDB
 ## Obtenemos los datos necesarios para el funcionamiento del programa a traves del usuario## 
 #Ingreamos nuestro archivo PATH con el que trabajaremos
 print("Por favor ingresa el path del archivo PDB con el que deseas que trabajemos en este programa: ")
-path= input
+path= input()  # NUEVO:tenias input y cambiamos a input()
 #Especificamos la cadena en la que buscaremos los residuos 
 print("Dentro de que cadena desea que el programa haga su busqueda de residuo?")
-cadena= input
+cadena= input()  # NUEVO:tenias input y cambiamos a input()
 #Especificamos el aminoacido que deseamos usar
 print("Ingrese el aminoacido que desea buscar dentro del archivo")
-residuos = input
+residuos = input()  # NUEVO:tenias input y cambiamos a input()
 
 
 #Definimos la funcion que obtendra los residuos de aminoacido de interes en conjunto con sus argumentos 
 def residuo(path, cadena, residuos):
 #Generamos un parser que nos permita ignorar los "warnings" sobre PDB 
- parser= PDB.PDBParser (Quiet= True)
+ parser= PDB.PDBParser (Quiet= True)  # NUEVO:tenias Quiet y era QUIET
  #Creamos estructura, un metodo para obtener datos 
  estructura = parser.get_structure("proteina",path)
 #Creamos la lista en la que guardaremos los residuos (bueno los residuos en forma de lista)
@@ -52,12 +52,12 @@ def residuo(path, cadena, residuos):
          if string == modelo[cadena]:
              for waste in string:
                  if waste.get_resname() == residuos:
-                     lista_res.append(waste.get_id())
-                 if len (lista_res)<1:
+                     lista_res.append(waste.get_id())  # NUEVO: se agregó [1] para indicar la posición dentro de la lista que nos interesa
+ if len (lista_res)<1:  # NUEVO:este if estaba mal identado, pues esta evaluación la necesitas cuando termine los for y ver si quedó vacio
                      return("No se encontro el aminoacido dentro de la cadena seleccionada")
                    
 
- for codon in residuo:
+ for codon in lista_res:  # NUEVO:tenias in residuo (que es la funcion en sí) y era in lista_res (porque ahi guardas tus residuos)
      print(codon)
 
 #Llamamos a la funcion principal 
