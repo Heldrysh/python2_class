@@ -1,0 +1,78 @@
+"""
+NAME
+       Entrez.py
+VERSION
+        1.0
+AUTHOR
+        Diego Montes Gabriel <<dmontes@lcg.unam.mx>>
+DESCRIPTION 
+        1)Haciendo uso de las funciones de Entrez.read y Entrezz,einfo obtenemos informacion de la base
+        de datos "protein" y la imprimimos
+        2)Buscamos el ID de diversos articulos teniendo de refrencia el nombre del autor y 2 palabras clave, ademas guardamos estos IDs
+        en un archivo .txt
+CATEGORY
+        Analizador de bases de datos 
+GITHUB
+      
+INPUT 
+  Un email de referencia que ingresamos en Entrez.email
+  Nombre del autor de interes
+  Palabras clave a buscar en el titulo (2)
+OUTPUT 
+    Un archivo .txt que es "reescribible" en cual se guardan los IDs de los articulos de interes
+EXAMPLES
+  Input:
+    Amaranta Manrique (como autora) Y ( alacranes (en título del artículo) O ética (en título del artículo) )
+  Output:
+    (dentro de "IDs_resultantes.txt")
+     ['37240574', '12705496', '63267735', '43211589']
+GITHUB
+ 
+ 
+      """
+#Importamos las liberias necesarias para poder realizar el programa
+from Bio import Entrez #Entrez es una herramienta para buscar info dentro de bases de datos bioinformaticas
+from pprint import pprint #mejoramos la viasualizacion de diccionarios 
+#Damos el correo de referencia
+Entrez.email= "dmontes@lcg.unam.mx"
+#A traves de .einfo accedemos a protein
+handle = Entrez.einfo(db="protein", term=termino) #Proporciona recuentos de términos de índice de campo, última actualización y enlaces disponibles para cada base de datos
+record = Entrez.read(handle)
+#Segun yo hay 2 soluciones en la primera podemos imprimir directamente ECNo y protein_protein_small_genome
+# Y en la segunda podemos iterar sobre Fieldlist y Linklist
+#PRIMER CASO 
+print(record["DbInfo"]["FieldList"]["ECNO"])
+print(record["DbInfo"]["LinkList"]["protein_protein_small_genome"])
+#Segundo en este buscamos sobre los "List"
+  #Primero en Field
+for field in record['DbInfo']['FieldList']:
+    # Seleccionamos especificamente ECNO y si es la imprimimos
+    if field['Name'] == 'ECNO':
+        print(field['Name'])
+#Luego en "LInk"
+for field in record['DbInfo']['LinkList']:
+    # Buscamos en especifico protein_protein_small_genome y si es la imprimimos
+    if field['Name'] == 'protein_protein_small_genome':
+        print(field['Name'])
+handle.close()
+
+#SEGUNDA TAREA 
+def busqueda(data_base):
+    palabras_clave=[]
+    
+    nombre_autor=str(input('Por favor introduzca el nombre del autor: '))
+    palabras_clave.append(str(input('Introduce la palabra clave del titulo: ')))
+    palabras_clave.append(str(input('Introduce otra palabra clave en el titulo: ')))
+    
+    busqueda_de_claves=f'(({nombre_autor}[AUTH] OR {nombre_autor}[All Fields]) AND ({palabras_clave[0]}[Title] OR {palabras_clave[1]}[Title]))'
+    handle = Entrez.esearch(db=data_base, term=busqueda_de_claves) 
+    record = Entrez.read(handle)
+    handle.close()
+    #Encontramos los IDs de interes
+IDs = record["IdList"]
+# Creamos el archivo con los IDs
+archivo = "IDs_resultantes.txt"
+with open(archivo, "w+") as file: #El "+" lo conservamos por si se necesitan modificaciones posteriores
+    for id in IDs:
+        archivo.write(id)
+ 
