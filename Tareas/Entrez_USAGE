@@ -10,6 +10,7 @@ DESCRIPTION
         de datos "protein" y la imprimimos
         2)Buscamos el ID de diversos articulos teniendo de refrencia el nombre del autor y 2 palabras clave, ademas guardamos estos IDs
         en un archivo .txt
+        3) Haciendo uso de .efetch obtenmos  los IDs de los articulos en los que es citado el articulo de interes, ademas  de almacenar su abstract en un archivo
 CATEGORY
         Analizador de bases de datos 
 GITHUB
@@ -27,11 +28,15 @@ EXAMPLES
   Output:
     (dentro de "IDs_resultantes.txt")
      ['37240574', '12705496', '63267735', '43211589']
-GITHUB
- 
- 
+     2) "Los tritones de piel áspera ( Taricha granulosa ) usan tetrodotoxina (TTX) para bloquear los canales de sodio (Na v ) activados por voltaje como defensa química contra la depredación. 
+     Curiosamente, los tritones exhiben una variación extrema a nivel de población en la toxicidad atribuida a una carrera armamentista coevolutiva con serpientes depredadoras resistentes a TTX,
+     pero se desconoce la fuente de TTX en los tritones. Aquí, investigamos si las bacterias simbióticas aisladas de tritones tóxicos podrían producir TTX. Caracterizamos la microbiota asociada 
+     a la piel de una población tóxica y no tóxica de tritones y establecimos cultivos puros de simbiontes bacterianos aislados de tritones tóxicos. Luego analizamos los medios de cultivo bacterianos
+     para detectar TTX usando LC-MS / MS e identificamos cepas bacterianas productoras de TTX de cuatro géneros, incluido Aeromonas ,Pseudomonas , Shewanella y Sphingopyxis . Además, secuenciamos la familia 
+     de genes del canal de Na v en tritones tóxicos y encontramos que los tritones expresaban canales de Na v con sitios de unión TTX modificados, lo que confiere una resistencia fisiológica extrema a TTX.
+     Este estudio destaca las complejas interacciones entre la fisiología adaptativa, la simbiosis animal-bacteriana y el contexto ecológico.
       """
-#Importamos las liberias necesarias para poder realizar el programa
+"#Importamos las liberias necesarias para poder realizar el programa
 from Bio import Entrez #Entrez es una herramienta para buscar info dentro de bases de datos bioinformaticas
 from pprint import pprint #mejoramos la viasualizacion de diccionarios 
 #Damos el correo de referencia
@@ -76,4 +81,25 @@ archivo = "IDs_resultantes.txt"
 with open(archivo, "w+") as file: #El "+" lo conservamos por si se necesitan modificaciones posteriores
     for id in IDs:
         archivo.write(id)
+        
+ ##Tercer tarea
+
+#Generamos el archivo en el que se guaradaran los IDs y abstracts
+referencias = open("abstracts.txt",'w+')
+#Obtenemos la informacion para cada ID dentro del file 
+for nombre_id in IDs:
+    sabueso = Entrez.efetch(db="pubmed", id=nombre_id, #A traves de efetch buscamos y guaradmos los abstracts
+                                rettype="abstract", retmode="text")
+    data = sabueso.read()
+    referencias.write(data) 
+    
+    #Obtenemos las citas del articulo
+    resultados_citas = Entrez.read(Entrez.elink(dbfrom="pubmed", db="pmc",
+                                  LinkName="pubmed_pmc_refs", from_uid=nombre_id))
+    #De las citas obtenidas, guardamos sus IDs dentro de una lista
+    pmc_ids = [link["Id"] for link in resultados_citas[0]["LinkSetDb"][0]["Link"]]
+    for citas in pmc_ids 
+        referencias.write(citas)
+
+
  
